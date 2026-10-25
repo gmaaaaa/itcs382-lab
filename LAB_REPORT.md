@@ -48,52 +48,52 @@ Table 2. All findings on the starter code
 
 | No. | File:line | Finding | Found by (SonarQube, AI or both) | SonarQube rule or course term | Correct? (yes or no, and why) |
 | --- | --- | --- | --- | --- | --- |
-| 1 | ParcelService.java:42 | pickUp compares the parcel code with == instead of equals(), so a pickup never matches | both (AI No. 1) | java:S4973 | yes, in step C2 `pickup P1 5` printed Fee: 0.0 instead of 30.0 and P1 stayed STORED |
-| 2 | ParcelService.java:76 | FileWriter is never closed, so nothing is written | both (AI No. 2) | java:S2095 | yes, parcels.csv was empty (0 bytes) after the C2 run |
-| 3 | ParcelService.java:80 | Empty catch block hides a failed save | both (AI No. 3) | java:S108 | yes, lines 80-81 catch IOException and do nothing |
-| 4 | ParcelService.java:6 | Unused import java.util.Date | both (AI No. 7) | java:S1128 | yes, Date is not used anywhere in the file |
-| 5 | ParcelService.java:12 | Unused field maxParcels, so the limit is never enforced | both (AI No. 8) | java:S1068 | yes, nothing reads maxParcels |
-| 6 | ParcelService.java:1 | Use the java.time API for date and time | SonarQube | java:S2143 | yes, it comes from the unused Date import, so removing the import also fixes it |
-| 7 | ParcelService.java:30, 67, 69; Main.java:9, 15, 17, 22 | System.out is used instead of a logger | SonarQube | java:S106 | partly, printing is the output of a command-line program, but the SMS message at ParcelService.java:30 is printed from inside the service |
-| 8 | Main.java:11-17 | No input check, so a missing argument or a bad number crashes the program | AI (No. 4) | probable bug | yes, typing `store P1` threw ArrayIndexOutOfBoundsException at Main.java:13 |
-| 9 | ParcelService.java:49 | pickUp returns 0 for an unknown code, the same value as a free pickup | AI (No. 5) | probable bug | yes, `pickup X9 10` printed Fee: 0.0 |
-| 10 | Main.java:8 | The Scanner is never closed | AI (No. 6) | resource leak (the Java extension also warns, SonarQube does not) | yes, but low risk because it wraps System.in and the program ends right after |
-| 11 | Parcel.java:13; ParcelService.java:28, 44, 68 | Status values are repeated string literals | AI (No. 9) | code smell | yes, "STORED" appears twice, but the AI points to No. 28 for the enum when it means No. 27 |
-| 12 | ParcelService.java:53, 57, 59, 61 | Magic numbers for the free days and the rates | AI (No. 10) | code smell | yes, 3 appears four times |
-| 13 | Main.java:6-27 | main is too complex | AI (No. 11) | code smell | partly, main is only 22 lines, so "too complex" is vague |
-| 14 | Main.java:11 | split(" ") makes empty tokens when there are two spaces | AI (No. 12) | probable bug | yes, `store  P1 6501 2` (two spaces) read 6501 as the size and printed No free locker |
-| 15 | ParcelService.java:24-37 | storeParcel finds a locker, sets the status, sends an SMS and saves the file | AI (No. 13) | procedural cohesion | yes, the steps are related only by their order |
-| 16 | ParcelService.java:39-50 | pickUp frees the locker, sets the status, saves the file and computes the fee | AI (No. 14) | procedural cohesion | yes, the same pattern as storeParcel |
-| 17 | ParcelService.java:64-72 | printParcels(boolean) prints two different reports chosen by a flag | AI (No. 15) | logical cohesion | yes, forStaff selects which report runs |
-| 18 | Main.java:6-27 | main selects unrelated actions by the command word | AI (No. 16) | logical cohesion | yes, but this is normal for a command loop |
-| 19 | ParcelService.java:9 | ParcelService does lockers, fees, SMS, console output and CSV saving | AI (No. 17) | weak class cohesion | yes, five different jobs in one class |
-| 20 | ParcelService.java:52-62 | fee uses no attribute of ParcelService | AI (No. 18) | weak class cohesion | yes, it uses only parcel.getSize() |
-| 21 | Parcel.java:3-27 | Parcel has a status but no methods to change it | AI (No. 19) | weak class cohesion | yes, ParcelService changes status at lines 28 and 44 |
-| 22 | ParcelService.java:28, 44, 68 | ParcelService reads and writes Parcel.status directly | AI (No. 20) | content coupling | yes, status is a public field written from another class |
-| 23 | Main.java:19, 21 | Main passes the flag forStaff to printParcels | AI (No. 21) | control coupling | yes, the flag changes what the method does |
-| 24 | ParcelService.java:46 | fee receives the whole Parcel but uses only its size | AI (No. 22) | stamp coupling | partly, both methods are in the same class, so it is not coupling between classes |
-| 25 | Main.java:13-15 | Main gets back a whole Locker only to read its number | AI (No. 23) | stamp coupling | partly, storeParcel does need the whole Parcel, only the returned Locker is stamp coupling |
-| 26 | Main.java:22 | Main reaches through getLockers() to count free lockers | AI (No. 24) | strong coupling (reach-through) | yes, Main does domain logic on ParcelService's lockers |
-| 27 | ParcelService.java:41-42 | locker.getParcel().getCode() reaches through Locker to Parcel | AI (No. 25) | strong coupling (reach-through) | yes, a chain of two calls |
-| 28 | Locker.java:5; Parcel.java:6; ParcelService.java:15-17, 26, 56, 58 | Size is an int code 1, 2, 3 that several classes must read the same way | AI (No. 26) | connascence of convention | yes, the comments at Locker.java:5 and Parcel.java:6 repeat the meaning |
-| 29 | Parcel.java:13; ParcelService.java:28, 44, 68 | Two classes must agree on the exact status strings | AI (No. 27) | connascence of convention | yes, a typo such as "STORE" would still compile |
-| 30 | Main.java:13; ParcelService.java:15-17 | Parcel(String, String, int) and Locker(int, int) take arguments of the same type | AI (No. 28) | connascence of position | yes, swapping code and studentId still compiles |
-| 31 | ParcelService.java:36, 49 | null means no free locker and 0 means not found | AI (No. 29) | connascence of convention | yes, Main must know both special values |
-| 32 | Parcel.java:7 | The field status is public | AI (No. 30) | field that is not private | yes, it is the only field that is not private |
-| 33 | ParcelService.java:20-22 | getLockers() returns the internal list | AI (No. 31) | internal collection returned | yes, a caller can call getLockers().clear() |
-| 34 | Locker.java:25-27 | setParcel lets any caller skip the free and size check | AI (No. 32) | weak encapsulation | yes, the check lives only in ParcelService.java:26 |
+| 1 | ParcelService.java:42 | pickUp compares the parcel code with == instead of equals(), so a pickup never matches | both (AI No. 1) | java:S4973 | yes, pickup P1 5 printed 0.0 and the parcel stayed STORED. But saying it never matches is too strong. |
+| 2 | ParcelService.java:76 | FileWriter is never closed, so nothing is written | both (AI No. 2) | java:S2095 | yes, the CSV file was empty after the run. But an unclosed writer does not always leave an empty file. |
+| 3 | ParcelService.java:80 | Empty catch block hides a failed save | both (AI No. 3) | java:S108 | yes, the catch block is empty, so it hides the error. |
+| 4 | ParcelService.java:6 | Unused import java.util.Date | both (AI No. 7) | java:S1128 | yes, Date is imported but not used. |
+| 5 | ParcelService.java:12 | Unused field maxParcels, so the limit is never enforced | both (AI No. 8) | java:S1068 | yes, the code never reads maxParcels. |
+| 6 | ParcelService.java:1 | Use the java.time API for date and time | SonarQube | java:S2143 | partly, Date is not used. We only need to remove the import. |
+| 7 | ParcelService.java:30, 67, 69; Main.java:9, 15, 17, 22 | System.out is used instead of a logger | SonarQube | java:S106 | partly, System.out is used, but the menu and reports need to print text. |
+| 8 | Main.java:11-17 | No input check, so a missing argument or a bad number crashes the program | AI (No. 4) | probable bug | yes, store P1 crashed because some inputs were missing. |
+| 9 | ParcelService.java:49 | pickUp returns 0 for an unknown code, the same value as a free pickup | AI (No. 5) | probable bug | yes, an unknown code also prints Fee: 0.0. |
+| 10 | Main.java:8 | The Scanner is never closed | AI (No. 6) | resource leak (the Java extension also warns, SonarQube does not) | yes, the Scanner is not closed, but the program ends after the loop. |
+| 11 | Parcel.java:13; ParcelService.java:28, 44, 68 | Status values are repeated string literals | AI (No. 9) | code smell | yes, STORED is used twice. The AI also wrote No. 28 instead of No. 27. |
+| 12 | ParcelService.java:53, 57, 59, 61 | Magic numbers for the free days and the rates | AI (No. 10) | code smell | yes, 3 is repeated and the fee numbers have no names. |
+| 13 | Main.java:6-27 | main is too complex | AI (No. 11) | code smell | partly, main has many branches, but the AI does not clearly explain why this is a problem. |
+| 14 | Main.java:11 | split(" ") makes empty tokens when there are two spaces | AI (No. 12) | probable bug | yes, two spaces made the program read 6501 as the size. |
+| 15 | ParcelService.java:24-37 | storeParcel finds a locker, sets the status, sends an SMS and saves the file | AI (No. 13) | procedural cohesion | partly, it does several things, but they all help store a parcel. |
+| 16 | ParcelService.java:39-50 | pickUp frees the locker, sets the status, saves the file and computes the fee | AI (No. 14) | procedural cohesion | partly, it does several things, but they all help finish a pickup. |
+| 17 | ParcelService.java:64-72 | printParcels(boolean) prints two different reports chosen by a flag | AI (No. 15) | logical cohesion | yes, the flag chooses which report to print. |
+| 18 | Main.java:6-27 | main selects unrelated actions by the command word | AI (No. 16) | logical cohesion | yes, the command chooses the action. This is normal for a menu. |
+| 19 | ParcelService.java:9 | ParcelService does lockers, fees, SMS, console output and CSV saving | AI (No. 17) | weak class cohesion | yes, one class handles lockers, fees, messages, reports and files. |
+| 20 | ParcelService.java:52-62 | fee uses no attribute of ParcelService | AI (No. 18) | weak class cohesion | yes, fee uses size and days, not the service fields. |
+| 21 | Parcel.java:3-27 | Parcel has a status but no methods to change it | AI (No. 19) | weak class cohesion | partly, another class changes status. This shows weak encapsulation, but does not prove weak cohesion. |
+| 22 | ParcelService.java:28, 44, 68 | ParcelService reads and writes Parcel.status directly | AI (No. 20) | content coupling | yes, ParcelService changes status directly. |
+| 23 | Main.java:19, 21 | Main passes the flag forStaff to printParcels | AI (No. 21) | control coupling | yes, the flag changes what the method does. |
+| 24 | ParcelService.java:46 | fee receives the whole Parcel but uses only its size | AI (No. 22) | stamp coupling | partly, fee only needs the size, but both methods are in the same class. |
+| 25 | Main.java:13-15 | Main gets back a whole Locker only to read its number | AI (No. 23) | stamp coupling | partly, Main only needs the locker number, but storeParcel needs the Parcel object. |
+| 26 | Main.java:22 | Main reaches through getLockers() to count free lockers | AI (No. 24) | strong coupling (reach-through) | yes, Main gets the lockers and counts the free ones itself. |
+| 27 | ParcelService.java:41-42 | locker.getParcel().getCode() reaches through Locker to Parcel | AI (No. 25) | strong coupling (reach-through) | yes, it gets the parcel from the locker, then gets its code. The code uses two separate statements. |
+| 28 | Locker.java:5; Parcel.java:6; ParcelService.java:15-17, 26, 56, 58 | Size is an int code 1, 2, 3 that several classes must read the same way | AI (No. 26) | connascence of convention | yes, the classes must use 1, 2 and 3 with the same meaning. |
+| 29 | Parcel.java:13; ParcelService.java:28, 44, 68 | Two classes must agree on the exact status strings | AI (No. 27) | connascence of convention | yes, both classes need the same status words. A typo still compiles. |
+| 30 | Main.java:13; ParcelService.java:15-17 | Parcel(String, String, int) and Locker(int, int) take arguments of the same type | AI (No. 28) | connascence of position | yes, swapping code and studentId still compiles. |
+| 31 | ParcelService.java:36, 49 | null means no free locker and 0 means not found | AI (No. 29) | connascence of convention | partly, Main checks null, but it treats 0 as a fee instead of saying the parcel was not found. |
+| 32 | Parcel.java:7 | The field status is public | AI (No. 30) | field that is not private | yes, status is public. |
+| 33 | ParcelService.java:20-22 | getLockers() returns the internal list | AI (No. 31) | internal collection returned | yes, other code can clear the list from getLockers(). |
+| 34 | Locker.java:25-27 | setParcel lets any caller skip the free and size check | AI (No. 32) | weak encapsulation | yes, setParcel does not check if the locker is free or big enough. |
 
 2.1 Name two problems that only the AI review found.
 
-First, Parcel.status is a public field that ParcelService changes directly at ParcelService.java:28 and 44, which is content coupling (rows 22 and 32). Second, Main passes the flag forStaff to printParcels at Main.java:19 and 21, which is control coupling and gives printParcels logical cohesion (rows 17 and 23).
+The AI found two problems. First, ParcelService changes Parcel.status directly. This is content coupling. Second, the flag in printParcels chooses which report to print. This is control coupling.
 
 2.2 Name one problem that only SonarQube found, or write none.
 
-java:S106: System.out is used instead of a logger at ParcelService.java:30, 67, 69 and Main.java:9, 15, 17, 22 (row 7).
+Only SonarQube reported java:S106. It found System.out and suggested using a logger, for example at Main.java:9.
 
 2.3 Name one AI finding that was wrong or too vague, and explain why. If every finding was right, explain how you checked them.
 
-AI finding No. 22 calls ParcelService.java:46 -> 52 stamp coupling, but fee and pickUp are both methods of ParcelService, so this is not an interaction between classes, which is what the prompt asked about. I checked every finding by opening the file at the line the AI gave, and I ran the program to test the bugs: `pickup P1 5` printed Fee: 0.0, `store P1` crashed with ArrayIndexOutOfBoundsException, and two spaces in a command shifted the arguments.
+Finding No. 22 is partly right. The fee method gets a whole Parcel but only needs its size. But fee and pickUp are in the same class. So this is not a problem between two classes like the prompt asked.
 
 ## Task 3. Fix and check
 
@@ -101,21 +101,41 @@ Table 3. What you did with each SonarQube issue in Table 1
 
 | No. in Table 1 | Fixed or kept | Commit, or the reason for keeping it |
 | --- | --- | --- |
-| 1 | | |
+| 1 | Fixed | 283b5d4 |
+| 2 | Fixed | 283b5d4 |
+| 3 | Fixed | de3db53 |
+| 4 | Kept | The SMS message is part of the program's output, and moving it to Main would be a bigger change. |
+| 5 | Fixed | 3651fe9 |
+| 6 | Kept | The staff report is part of the program's output, and moving it to Main would be a bigger change. |
+| 7 | Kept | The list report is part of the program's output, and moving it to Main would be a bigger change. |
+| 8 | Fixed | 007ed15 |
+| 9 | Fixed | a27c6dc |
+| 10 | Kept | Printing in Main is the output of a command-line program. |
+| 11 | Kept | Printing in Main is the output of a command-line program. |
+| 12 | Kept | Printing in Main is the output of a command-line program. |
+| 13 | Kept | Printing in Main is the output of a command-line program. |
 
-Number of SonarQube issues that remain after your fixes:
+Number of SonarQube issues that remain after your fixes: 7
 
 The two design problems that you fixed
 
 | Design problem (course term) | What you changed | Commit |
 | --- | --- | --- |
-| | | |
-| | | |
+| Connascence of convention (Table 2 row 28) | Replaced the int size codes 1, 2 and 3 with a Size enum in Locker, Parcel, ParcelService and Main. | 30b41a0 |
+| Content coupling (Table 2 row 22) | Made Parcel.status private, used a ParcelStatus enum, and added markStored() and markPickedUp() so that only Parcel changes its status. | b8c82da |
 
 Output of the program after your fixes, for the commands `store P1 6501 2`, `pickup P1 5` and `staff`, and the content of parcels.csv:
 
 ```text
+Commands: store <code> <studentId> <size 1-3>, pickup <code> <days>, list, staff, quit
+SMS to 6501: parcel P1 is in locker 2
+Locker 2
+Fee: 30.0
+P1 6501 PICKED_UP
+Free lockers: 3
 
+parcels.csv:
+P1,PICKED_UP
 ```
 
 ## Task 4. AI-generated poor and good designs
@@ -153,3 +173,4 @@ Output of the program after your fixes, for the commands `store P1 6501 2`, `pic
 | --- | --- | --- | --- |
 | Claude Code, Claude Opus 5.5 (claude-opus-5-5), 2026-10-25 | Task 2: review of parcelpoint with Prompt A, unchanged | reviews/parcelpoint-review.md | opened each file at the line given, and ran the program to test the bugs |
 | Claude Code, Claude Opus 5.5 (claude-opus-5-5), 2026-10-25 | Task 2: draft of Table 2 and answers 2.1 to 2.3 | LAB_REPORT.md, Task 2 | compared each row with Table 1, the review file and the code |
+| Claude Code, Claude Opus 5.5 (claude-opus-5-5), 2026-10-25 | Task 3: fixes of the SonarQube issues and the two design problems | parcelpoint/src/main/java/parcelpoint, all six files | built with mvn package after each fix, ran the commands of step C2, and checked the Problems panel |
