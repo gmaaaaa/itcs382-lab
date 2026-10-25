@@ -146,7 +146,7 @@ P1,PICKED_UP
 | AI tool and exact model | Claude Code, Claude Opus 5.5 (claude-opus-5-5) | Claude Code, Claude Opus 5.5 (claude-opus-5-5) |
 | Prompt (B or C as given, or your changed prompt in full) | B as given | C as given |
 | Builds with mvn package (yes or no) | yes | yes |
-| Number of classes, interfaces, enums and records | 1 (1 class) | 10 (6 classes, 1 interface, 2 enums, 1 record) |
+| Number of classes, interfaces, enums and records | 1 (1 class) | 11 (6 classes, 1 interface, 2 enums, 2 records; Rental is a private record inside RentalService) |
 | SonarQube issues, total | 16 | 1 |
 | SonarQube issues, by rule | java:S106: 10, java:S2386: 4, java:S3776: 1, java:S1141: 1 | java:S106: 1 |
 | AI review findings in Check 1 | 7 | 3 |
