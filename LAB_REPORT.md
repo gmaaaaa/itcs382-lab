@@ -1,16 +1,16 @@
 # Lab Report, Code Quality and Design Quality
 
-Repository URL:
+Repository URL: https://github.com/gmaaaaa/itcs382-lab
 
 ## Tools
 
 | Item | Version or name |
 | --- | --- |
-| JDK | |
-| Maven | |
-| IDE | |
-| SonarQube for IDE | |
-| AI tool and exact model | |
+| JDK | Temurin 25.0.4.1+1 |
+| Maven | 3.10.0 |
+| IDE | Visual Studio Code 1.143.1 |
+| SonarQube for IDE | 6.2.0 |
+| AI tool and exact model | Claude Code, Claude Opus 5.5 (claude-opus-5-5) |
 
 ## Task 1. SonarQube on the starter code
 
@@ -48,8 +48,8 @@ Table 2. All findings on the starter code
 
 | No. | File:line | Finding | Found by (SonarQube, AI or both) | SonarQube rule or course term | Correct? (yes or no, and why) |
 | --- | --- | --- | --- | --- | --- |
-| 1 | ParcelService.java:42 | pickUp compares the parcel code with == instead of equals(), so a pickup never matches | both (AI No. 1) | java:S4973 | yes, pickup P1 5 printed 0.0 and the parcel stayed STORED. But saying it never matches is too strong. |
-| 2 | ParcelService.java:76 | FileWriter is never closed, so nothing is written | both (AI No. 2) | java:S2095 | yes, the CSV file was empty after the run. But an unclosed writer does not always leave an empty file. |
+| 1 | ParcelService.java:42 | pickUp compares the parcel code with == instead of equals(), so a pickup never matches | both (AI No. 1) | java:S4973 | partly, pickup P1 5 printed 0.0 and the parcel stayed STORED. But saying it never matches is too strong. |
+| 2 | ParcelService.java:76 | FileWriter is never closed, so nothing is written | both (AI No. 2) | java:S2095 | partly, the CSV file was empty after the run. But an unclosed writer does not always leave an empty file. |
 | 3 | ParcelService.java:80 | Empty catch block hides a failed save | both (AI No. 3) | java:S108 | yes, the catch block is empty, so it hides the error. |
 | 4 | ParcelService.java:6 | Unused import java.util.Date | both (AI No. 7) | java:S1128 | yes, Date is imported but not used. |
 | 5 | ParcelService.java:12 | Unused field maxParcels, so the limit is never enforced | both (AI No. 8) | java:S1068 | yes, the code never reads maxParcels. |
@@ -159,7 +159,7 @@ No, SonarQube did not report cohesion or coupling directly. It reported java:S23
 
 4.2 Did the AI review tell the two versions apart? Give one finding for bikeshare-poor that does not appear for bikeshare-good.
 
-Yes. Both versions have 9 findings in Check 2, but the findings are different. For bikeshare-poor, the AI reported control coupling because main passes true or false to choose what handle does (BikeShare.java:28 and 30). The good version's review did not report control coupling.
+Yes. Both versions have 9 findings in Check 2, but the findings are different. For bikeshare-poor, the AI reported weak class cohesion because BikeShare holds the menu, the bike records, the fee rule and the file saving in one class (BikeShare.java:8-15). The good version's review did not report this problem.
 
 4.3 Which version would you rather extend with a new member type, such as a visitor who pays 4 baht per minute, and why?
 
@@ -169,17 +169,22 @@ I would choose bikeshare-good. I can add VISITOR(4) to MemberType and add visito
 
 5.1 What does SonarQube check, and what does it not check? Answer with examples from this lab.
 
+SonarQube finds bugs and code smells. In parcelpoint, it found strings compared with ==, a FileWriter that was not closed and an empty catch block. In this lab, it did not report content coupling from Parcel.status or control coupling from the forStaff flag. In bikeshare-poor, it reported the public static arrays but did not call this a coupling problem.
+
 5.2 When should you not trust the AI review? Give an example from this lab.
 
+I should not trust an AI finding without checking the code. For example, finding No. 22 called fee stamp coupling, but fee and pickUp are in the same class. This does not match the prompt, which asked about coupling between classes. I should check the code and the course definitions before accepting a finding.
+
 5.3 What will you do differently in Project Phase 2 after this lab?
+
+I will use enums for categories like member types and keep fields private. I will use separate methods instead of boolean flags that choose between different jobs. I will use both SonarQube and an AI review to help find problems. I will check the findings myself before changing the code or adding them to the report.
 
 ## AI usage declaration
 
 | AI tool and exact model | Purpose | Files or parts that it produced or changed | How you checked its output |
 | --- | --- | --- | --- |
-| Claude Code, Claude Opus 5.5 (claude-opus-5-5), 2026-10-25 | Task 2: review of parcelpoint with Prompt A, unchanged | reviews/parcelpoint-review.md | opened each file at the line given, and ran the program to test the bugs |
-| Claude Code, Claude Opus 5.5 (claude-opus-5-5), 2026-10-25 | Task 2: draft of Table 2 and answers 2.1 to 2.3 | LAB_REPORT.md, Task 2 | compared each row with Table 1, the review file and the code |
-| Claude Code, Claude Opus 5.5 (claude-opus-5-5), 2026-10-25 | Task 3: fixes of the SonarQube issues and the two design problems | parcelpoint/src/main/java/parcelpoint, all six files | built with mvn package after each fix, ran the commands of step C2, and checked the Problems panel |
-| Claude Code, Claude Opus 5.5 (claude-opus-5-5), 2026-10-25 | Task 4: bikeshare-poor from Prompt B and bikeshare-good from Prompt C, each in a new session | bikeshare-poor, bikeshare-good | built both with mvn package, and ran two rentals and returns to check the fees and rides.csv |
-| Claude Code, Claude Opus 5.5 (claude-opus-5-5), 2026-10-25 | Task 4: review of both versions with Prompt A, unchanged, each in a new session | reviews/bikeshare-poor-review.md, reviews/bikeshare-good-review.md | opened the files at the lines given |
-| Claude Code, Claude Opus 5.5 (claude-opus-5-5), 2026-10-25 | Task 4: draft of the table and answers 4.1 to 4.3 | LAB_REPORT.md, Task 4 | compared them with the SonarQube panel, the review files and the code |
+| Claude Code, Claude Opus 5.5 (claude-opus-5-5), 2026-10-25 | Task 2: review of parcelpoint with Prompt A, and a draft of Table 2 and answers 2.1–2.3 | reviews/parcelpoint-review.md, LAB_REPORT.md Task 2 | opened each file at the line given, and ran the program to test the bugs |
+| Claude Code, Claude Opus 5.5 (claude-opus-5-5), 2026-10-25 | Task 3: fixes of the SonarQube issues and the two design problems | parcelpoint/src/main/java/parcelpoint | built with mvn package after each fix, ran the commands of step C2, and checked the Problems panel |
+| Claude Code, Claude Opus 5.5 (claude-opus-5-5), 2026-10-25 | Task 4: bikeshare-poor from Prompt B, bikeshare-good from Prompt C, reviews of both with Prompt A, and a draft of answers 4.1–4.3 | bikeshare-poor, bikeshare-good, reviews, LAB_REPORT.md Task 4 | built both with mvn package, ran rentals and returns, and compared the answers with the SonarQube panel |
+| Claude Code, Claude Opus 5.5 (claude-opus-5-5), 2026-10-25 | Task 5: draft of answers 5.1–5.3 | LAB_REPORT.md Task 5 | used the draft to help write the answers |
+| ChatGPT, Astra 6, 2026-10-25 | Guided the lab steps, simplified the wording of Table 2 "Correct?" and answers 2.1–2.3, 4.1–4.3 and 5.1–5.3, and reviewed the final report | LAB_REPORT.md, Tasks 2 to 5 | compared the wording with the code, the review files and the results of the runs |
