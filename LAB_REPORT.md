@@ -183,8 +183,8 @@ I will use enums for categories like member types and keep fields private. I wil
 
 | AI tool and exact model | Purpose | Files or parts that it produced or changed | How you checked its output |
 | --- | --- | --- | --- |
-| Claude Code, Claude Opus 5.5 (claude-opus-5-5), 2026-10-25 | Task 2: review of parcelpoint with Prompt A, and a draft of Table 2 and answers 2.1–2.3 | reviews/parcelpoint-review.md, LAB_REPORT.md Task 2 | opened each file at the line given, and ran the program to test the bugs |
-| Claude Code, Claude Opus 5.5 (claude-opus-5-5), 2026-10-25 | Task 3: fixes of the SonarQube issues and the two design problems | parcelpoint/src/main/java/parcelpoint | built with mvn package after each fix, ran the commands of step C2, and checked the Problems panel |
-| Claude Code, Claude Opus 5.5 (claude-opus-5-5), 2026-10-25 | Task 4: bikeshare-poor from Prompt B, bikeshare-good from Prompt C, reviews of both with Prompt A, and a draft of answers 4.1–4.3 | bikeshare-poor, bikeshare-good, reviews, LAB_REPORT.md Task 4 | built both with mvn package, ran rentals and returns, and compared the answers with the SonarQube panel |
-| Claude Code, Claude Opus 5.5 (claude-opus-5-5), 2026-10-25 | Task 5: draft of answers 5.1–5.3 | LAB_REPORT.md Task 5 | used the draft to help write the answers |
-| ChatGPT, Astra 6, 2026-10-25 | Guided the lab steps, simplified the wording of Table 2 "Correct?" and answers 5.1–5.3, and reviewed the final report | LAB_REPORT.md, Tasks 2 and 5 | compared the wording with the code, the review files and the results of the runs |
+| Claude Code, Claude Opus 5.5 (claude-opus-5-5), 2026-10-25 | Task 2: Prompt A review, and a first draft of Table 2 | reviews/parcelpoint-review.md | I went through every row of Table 2, changed the "Correct?" judgments where I disagreed, and decided the final answers. The bugs were tested by running the program. |
+| Claude Code, Claude Opus 5.5 (claude-opus-5-5), 2026-10-25 | Task 3: code fixes | parcelpoint/src/main/java/parcelpoint | Each fix was built and run. I checked the SonarQube panel. |
+| Claude Code, Claude Opus 5.5 (claude-opus-5-5), 2026-10-25 | Task 4: both BikeShare versions, their Prompt A reviews, and a first draft of answers 4.1–4.3 | bikeshare-poor, bikeshare-good, reviews | Both versions were built and run. I checked the SonarQube counts. |
+| Claude Code, Claude Opus 5.5 (claude-opus-5-5), 2026-10-25 | Task 5: a first draft of answers 5.1–5.3 | LAB_REPORT.md Task 5 | Compared with my results in Tasks 1 to 4. |
+| ChatGPT, Astra 6, 2026-10-25 | Explained the instructions and suggested clearer wording | Wording of answers in Tasks 2, 4 and 5 | I chose which suggestions to use. |
