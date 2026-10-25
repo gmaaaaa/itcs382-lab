@@ -142,22 +142,28 @@ P1,PICKED_UP
 
 | Item | bikeshare-poor | bikeshare-good |
 | --- | --- | --- |
-| Date | | |
-| AI tool and exact model | | |
-| Prompt (B or C as given, or your changed prompt in full) | | |
-| Builds with mvn package (yes or no) | | |
-| Number of classes, interfaces, enums and records | | |
-| SonarQube issues, total | | |
-| SonarQube issues, by rule | | |
-| AI review findings in Check 1 | | |
-| AI review findings in Check 2 | | |
-| Review output file in the reviews folder | | |
+| Date | 2026-10-25 | 2026-10-25 |
+| AI tool and exact model | Claude Code, Claude Opus 5.5 (claude-opus-5-5) | Claude Code, Claude Opus 5.5 (claude-opus-5-5) |
+| Prompt (B or C as given, or your changed prompt in full) | B as given | C as given |
+| Builds with mvn package (yes or no) | yes | yes |
+| Number of classes, interfaces, enums and records | 1 (1 class) | 10 (6 classes, 1 interface, 2 enums, 1 record) |
+| SonarQube issues, total | 16 | 1 |
+| SonarQube issues, by rule | java:S106: 10, java:S2386: 4, java:S3776: 1, java:S1141: 1 | java:S106: 1 |
+| AI review findings in Check 1 | 7 | 3 |
+| AI review findings in Check 2 | 9 | 9 |
+| Review output file in the reviews folder | reviews/bikeshare-poor-review.md | reviews/bikeshare-good-review.md |
 
 4.1 Did SonarQube report any cohesion or coupling problem in bikeshare-poor? Quote the rule and the message if it did.
 
+No, SonarQube did not report cohesion or coupling directly. It reported java:S2386, 'Make this member "protected".', for the public static arrays at BikeShare.java:11–14. It also reported java:S3776, "Refactor this method to reduce its Cognitive Complexity from 20 to the 15 allowed.", for handle(boolean rent). These rules point out public fields and complex code, but do not name the design problems.
+
 4.2 Did the AI review tell the two versions apart? Give one finding for bikeshare-poor that does not appear for bikeshare-good.
 
+Yes. Both versions have 9 findings in Check 2, but the findings are different. For bikeshare-poor, the AI reported control coupling because main passes true or false to choose what handle does (BikeShare.java:28 and 30). The good version's review did not report control coupling.
+
 4.3 Which version would you rather extend with a new member type, such as a visitor who pays 4 baht per minute, and why?
+
+I would choose bikeshare-good. I can add VISITOR(4) to MemberType and add visitor to the menu help text. In bikeshare-poor, I need to change the number codes, input check and fee calculation in several places. If I forget to change the fee calculation, visitors will pay the staff rate.
 
 ## Task 5. Reflection
 
@@ -174,3 +180,6 @@ P1,PICKED_UP
 | Claude Code, Claude Opus 5.5 (claude-opus-5-5), 2026-10-25 | Task 2: review of parcelpoint with Prompt A, unchanged | reviews/parcelpoint-review.md | opened each file at the line given, and ran the program to test the bugs |
 | Claude Code, Claude Opus 5.5 (claude-opus-5-5), 2026-10-25 | Task 2: draft of Table 2 and answers 2.1 to 2.3 | LAB_REPORT.md, Task 2 | compared each row with Table 1, the review file and the code |
 | Claude Code, Claude Opus 5.5 (claude-opus-5-5), 2026-10-25 | Task 3: fixes of the SonarQube issues and the two design problems | parcelpoint/src/main/java/parcelpoint, all six files | built with mvn package after each fix, ran the commands of step C2, and checked the Problems panel |
+| Claude Code, Claude Opus 5.5 (claude-opus-5-5), 2026-10-25 | Task 4: bikeshare-poor from Prompt B and bikeshare-good from Prompt C, each in a new session | bikeshare-poor, bikeshare-good | built both with mvn package, and ran two rentals and returns to check the fees and rides.csv |
+| Claude Code, Claude Opus 5.5 (claude-opus-5-5), 2026-10-25 | Task 4: review of both versions with Prompt A, unchanged, each in a new session | reviews/bikeshare-poor-review.md, reviews/bikeshare-good-review.md | opened the files at the lines given |
+| Claude Code, Claude Opus 5.5 (claude-opus-5-5), 2026-10-25 | Task 4: draft of the table and answers 4.1 to 4.3 | LAB_REPORT.md, Task 4 | compared them with the SonarQube panel, the review files and the code |
